@@ -21,8 +21,8 @@ const userSchema = new Schema<IUser>(
       enum: Object.values(UserRole),
       default: UserRole.RIDER,
     },
-    firstName: { type: String },
-    lastName: { type: String },
+    name: { type: String },
+
     phone: { type: String },
     isActive: { type: Boolean, default: true },
     auths: [authProviderSchema],

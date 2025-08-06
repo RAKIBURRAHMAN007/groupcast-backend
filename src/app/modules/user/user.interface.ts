@@ -14,11 +14,14 @@ export interface IUser {
   email: string;
   password: string;
   role?: UserRole;
-  firstName?: string;
-  lastName?: string;
+  name?: string;
+
   phone?: string;
   isActive?: boolean;
-  createdAt: Date;
-  updatedAt: Date;
+  isBlocked?: boolean;
+  isVerified?: boolean;
+  isDeleted?: boolean;
+  createdAt?: Date;
+  updatedAt?: Date;
   auths: IAuthProvider[];
 }
