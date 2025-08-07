@@ -1,16 +1,37 @@
+import { Types } from "mongoose";
 import { IUser } from "../user/user.interface";
 
 export enum DriverStatus {
-  ONLINE = "online",
-  OFFLINE = "offline",
-  SUSPENDED = "suspended",
+  PENDING = "PENDING",
+  APPROVED = "APPROVED",
+  SUSPENDED = "SUSPENDED",
+  REJECTED = "REJECTED",
 }
-export interface IDriver extends IUser {
-  vehicleType: string;
+
+export enum DocumentType {
+  LICENSE = "license",
+  REGISTRATION = "registration",
+  INSURANCE = "insurance",
+}
+
+export interface IDriver {
+  user: Types.ObjectId;
   licenseNumber: string;
-  vehicleRegistration: string;
-  status: DriverStatus;
-  isApproved: boolean;
+  vehicleInfo: {
+    make: string;
+    model: string;
+    year: number;
+    color: string;
+    licensePlate: string;
+  };
+  status?: DriverStatus;
+  isOnline?: boolean;
+  currentRide?: Types.ObjectId | null;
   rating?: number;
-  totalRides: number;
+  documents?: {
+    type?: DocumentType;
+    url?: string;
+    verified?: boolean;
+  }[];
+  createdAt?: Date;
 }

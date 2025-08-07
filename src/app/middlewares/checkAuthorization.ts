@@ -24,23 +24,25 @@ export const checkAuth =
       if (!isUserExist) {
         throw new AppError(httpStatus.BAD_REQUEST, "User does not exist");
       }
-      if (
-        isUserExist.isDeleted ||
-        isUserExist.isBlocked ||
-        !isUserExist.isActive
-      ) {
-        throw new AppError(
-          httpStatus.BAD_REQUEST,
-          `User is ${isUserExist.isActive}`
-        );
+      if (isUserExist.isDeleted) {
+        throw new AppError(httpStatus.BAD_REQUEST, "User is deleted");
       }
+
+      if (isUserExist.isBlocked) {
+        throw new AppError(httpStatus.BAD_REQUEST, "User is blocked");
+      }
+
+      if (!isUserExist.isActive) {
+        throw new AppError(httpStatus.BAD_REQUEST, "User is not active");
+      }
+
       if (isUserExist.isDeleted) {
         throw new AppError(httpStatus.BAD_REQUEST, "User is deleted");
       }
       if (!verifiedToken) {
         throw new AppError(403, "not verified");
       }
-      if (!authRoles.includes(verifiedToken.role)) {
+      if (!authRoles.includes(verifiedToken.userRole)) {
         throw new AppError(403, "you are not permitted to this route");
       }
       req.user = verifiedToken;

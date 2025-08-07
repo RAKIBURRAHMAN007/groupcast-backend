@@ -21,10 +21,13 @@ const userSchema = new Schema<IUser>(
       enum: Object.values(UserRole),
       default: UserRole.RIDER,
     },
-    name: { type: String },
+    name: { type: String, required: true },
 
     phone: { type: String },
     isActive: { type: Boolean, default: true },
+    isBlocked: { type: Boolean, default: false },
+    isVerified: { type: Boolean, default: false },
+    isDeleted: { type: Boolean, default: false },
     auths: [authProviderSchema],
   },
   { timestamps: true, versionKey: false }

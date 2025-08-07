@@ -1,9 +1,9 @@
 import { Types } from "mongoose";
 
 export enum UserRole {
-  ADMIN = "admin",
-  DRIVER = "driver",
-  RIDER = "rider",
+  ADMIN = "ADMIN",
+  DRIVER = "DRIVER",
+  RIDER = "RIDER",
 }
 export interface IAuthProvider {
   provider: "google" | "credentials";
@@ -14,7 +14,7 @@ export interface IUser {
   email: string;
   password: string;
   role?: UserRole;
-  name?: string;
+  name: string;
 
   phone?: string;
   isActive?: boolean;

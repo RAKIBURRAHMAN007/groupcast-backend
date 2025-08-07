@@ -5,6 +5,7 @@ import { sendResponse } from "../../utils/sendResponse";
 import httpStatus from "http-status-codes";
 import { setAuthCookie } from "../../utils/setCookie";
 import AppError from "../../errorHelper/AppError";
+import { JwtPayload } from "jsonwebtoken";
 
 const login = catchAsync(
   async (req: Request, res: Response, next: NextFunction) => {
@@ -37,7 +38,47 @@ const getNewAccessToken = catchAsync(
     });
   }
 );
+const logout = catchAsync(
+  async (req: Request, res: Response, next: NextFunction) => {
+    res.clearCookie("accessToken", {
+      httpOnly: true,
+      secure: false,
+      sameSite: "lax",
+    });
+    res.clearCookie("refreshToken", {
+      httpOnly: true,
+      secure: false,
+      sameSite: "lax",
+    });
+    sendResponse(res, {
+      message: "user logout  successfully",
+      success: true,
+      statusCode: httpStatus.OK,
+      data: null,
+    });
+  }
+);
+const resetPassword = catchAsync(
+  async (req: Request, res: Response, next: NextFunction) => {
+    const oldPassword = req.body.oldPassword;
+    const newPassword = req.body.newPassword;
+    const decodedToken = req.user;
+    await authService.resetPassword(
+      oldPassword,
+      newPassword,
+      decodedToken as JwtPayload
+    );
+    sendResponse(res, {
+      message: "user password changed  successfully",
+      success: true,
+      statusCode: httpStatus.OK,
+      data: null,
+    });
+  }
+);
 export const authController = {
   login,
   getNewAccessToken,
+  logout,
+  resetPassword,
 };
