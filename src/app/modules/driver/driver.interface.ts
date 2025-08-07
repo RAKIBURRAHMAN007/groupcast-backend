@@ -5,7 +5,6 @@ export enum DriverStatus {
   PENDING = "PENDING",
   APPROVED = "APPROVED",
   SUSPENDED = "SUSPENDED",
-  REJECTED = "REJECTED",
 }
 
 export enum DocumentType {
@@ -28,6 +27,10 @@ export interface IDriver {
   isOnline?: boolean;
   currentRide?: Types.ObjectId | null;
   rating?: number;
+  location?: {
+    type: "Point";
+    coordinates: [number, number];
+  };
   documents?: {
     type?: DocumentType;
     url?: string;

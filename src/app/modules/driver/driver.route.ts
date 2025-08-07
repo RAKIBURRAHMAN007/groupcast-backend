@@ -24,4 +24,9 @@ router.post(
   checkAuth(UserRole.ADMIN),
   driverController.getallDriver
 );
+router.patch(
+  "/location",
+  checkAuth(UserRole.DRIVER),
+  driverController.updateDriverLocation
+);
 export const driverRoutes = router;

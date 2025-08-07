@@ -98,10 +98,30 @@ const getallDriver = async () => {
 
   return approvedDrivers;
 };
+const updateLocationAndStatus = async (
+  userId: string,
+  latitude: number,
+  longitude: number
+) => {
+  const updatedDriver = await Driver.findOneAndUpdate(
+    { userId },
+    {
+      isOnline: true,
+      location: {
+        type: "Point",
+        coordinates: [longitude, latitude],
+      },
+    },
+    { new: true }
+  );
+
+  return updatedDriver;
+};
 
 export const driverService = {
   requestDriverRegister,
   approveDriver,
   getallDriver,
   suspendDriver,
+  updateLocationAndStatus,
 };

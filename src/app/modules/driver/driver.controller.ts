@@ -60,10 +60,26 @@ const getallDriver = catchAsync(
     });
   }
 );
+const updateDriverLocation = catchAsync(async (req: Request, res: Response) => {
+  const userId = req.user.id;
+  const { latitude, longitude } = req.body;
 
+  const updatedDriver = await driverService.updateLocationAndStatus(
+    userId,
+    latitude,
+    longitude
+  );
+
+  res.status(httpStatus.OK).json({
+    success: true,
+    message: "Driver location and status updated successfully",
+    data: updatedDriver,
+  });
+});
 export const driverController = {
   requestDriverRegister,
   approveDriver,
   getallDriver,
   suspendDriver,
+  updateDriverLocation,
 };
