@@ -1,3 +1,5 @@
+import { Types } from "mongoose";
+
 export enum RideStatus {
   REQUESTED = "requested",
   ACCEPTED = "accepted",
@@ -15,8 +17,8 @@ export interface ILocation {
 
 export interface IRide {
   id: string;
-  riderId: string;
-  driverId?: string;
+  riderId: Types.ObjectId;
+  driverId?: Types.ObjectId;
   pickupLocation: ILocation;
   destination: ILocation;
   status: RideStatus;
@@ -25,6 +27,8 @@ export interface IRide {
   pickedUpAt?: Date;
   completedAt?: Date;
   cancelledAt?: Date;
+  cancellationReason?: string;
+
   fare?: number;
   distance?: number;
   estimatedDuration?: number;
