@@ -77,4 +77,111 @@ const acceptRide = async (rideId: string, driverId: string) => {
 
   return ride;
 };
-export const rideService = { requestRide, acceptRide };
+const rejectRide = async (rideId: string, driverId: string) => {
+  const ride = await Ride.findOne({
+    _id: rideId,
+    status: RideStatus.REQUESTED,
+  });
+
+  if (!ride) {
+    throw new AppError(
+      httpStatus.NOT_FOUND,
+      "Ride not found or cannot be rejected"
+    );
+  }
+
+  const driver = await Driver.findOne({ user: driverId });
+
+  if (!driver) {
+    throw new AppError(httpStatus.BAD_REQUEST, "Driver not found");
+  }
+
+  ride.status = RideStatus.CANCELLED;
+
+  await ride.save();
+
+  return ride;
+};
+const markPickedUp = async (rideId: string, driverId: string) => {
+  const ride = await Ride.findOne({
+    _id: rideId,
+
+    status: RideStatus.ACCEPTED,
+  });
+
+  if (!ride) {
+    throw new AppError(httpStatus.NOT_FOUND, "Ride not found or not accepted");
+  }
+  const driver = await Driver.findOne({ user: driverId });
+
+  if (!driver) {
+    throw new AppError(httpStatus.BAD_REQUEST, "Driver not found");
+  }
+
+  ride.status = RideStatus.PICKED_UP;
+  ride.pickedUpAt = new Date();
+
+  await ride.save();
+
+  return ride;
+};
+
+const markInTransit = async (rideId: string, driverId: string) => {
+  const ride = await Ride.findOne({
+    _id: rideId,
+
+    status: RideStatus.PICKED_UP,
+  });
+
+  if (!ride) {
+    throw new AppError(httpStatus.NOT_FOUND, "Ride not found or not picked up");
+  }
+  const driver = await Driver.findOne({ user: driverId });
+
+  if (!driver) {
+    throw new AppError(httpStatus.BAD_REQUEST, "Driver not found");
+  }
+  ride.status = RideStatus.IN_TRANSIT;
+
+  await ride.save();
+
+  return ride;
+};
+
+const markCompleted = async (rideId: string, driverId: string) => {
+  const ride = await Ride.findOne({
+    _id: rideId,
+
+    status: RideStatus.IN_TRANSIT,
+  });
+
+  if (!ride) {
+    throw new AppError(
+      httpStatus.NOT_FOUND,
+      "Ride not found or not in transit"
+    );
+  }
+  const driver = await Driver.findOne({ user: driverId });
+
+  if (!driver) {
+    throw new AppError(httpStatus.BAD_REQUEST, "Driver not found");
+  }
+
+  ride.status = RideStatus.COMPLETED;
+  ride.completedAt = new Date();
+
+  await ride.save();
+
+  await Driver.findByIdAndUpdate(driver._id, { currentRide: null });
+
+  return ride;
+};
+
+export const rideService = {
+  requestRide,
+  acceptRide,
+  rejectRide,
+  markPickedUp,
+  markInTransit,
+  markCompleted,
+};

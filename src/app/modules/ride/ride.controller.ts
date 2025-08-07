@@ -37,8 +37,68 @@ const acceptRide = catchAsync(
     });
   }
 );
+const rejectRide = catchAsync(
+  async (req: Request, res: Response, next: NextFunction) => {
+    const rideId = req.params.id;
+    const driverId = req.user.userId;
+
+    const ride = await rideService.rejectRide(rideId, driverId);
+
+    sendResponse(res, {
+      data: ride,
+      message: "Ride rejected successfully",
+      statusCode: httpStatus.OK,
+      success: true,
+    });
+  }
+);
+const markPickedUp = catchAsync(async (req: Request, res: Response) => {
+  const rideId = req.params.id;
+  const driverId = req.user.userId;
+
+  const ride = await rideService.markPickedUp(rideId, driverId);
+
+  sendResponse(res, {
+    data: ride,
+    message: "Ride marked as picked up",
+    statusCode: httpStatus.OK,
+    success: true,
+  });
+});
+
+const markInTransit = catchAsync(async (req: Request, res: Response) => {
+  const rideId = req.params.id;
+  const driverId = req.user.userId;
+
+  const ride = await rideService.markInTransit(rideId, driverId);
+
+  sendResponse(res, {
+    data: ride,
+    message: "Ride marked as in transit",
+    statusCode: httpStatus.OK,
+    success: true,
+  });
+});
+
+const markCompleted = catchAsync(async (req: Request, res: Response) => {
+  const rideId = req.params.id;
+  const driverId = req.user.userId;
+
+  const ride = await rideService.markCompleted(rideId, driverId);
+
+  sendResponse(res, {
+    data: ride,
+    message: "Ride marked as completed",
+    statusCode: httpStatus.OK,
+    success: true,
+  });
+});
 
 export const rideController = {
   requestRide,
   acceptRide,
+  rejectRide,
+  markPickedUp,
+  markInTransit,
+  markCompleted,
 };
