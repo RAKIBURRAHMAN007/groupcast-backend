@@ -1,4 +1,3 @@
-````markdown
 # Ride Sharing Backend API
 
 ## Project Overview
@@ -35,6 +34,7 @@ Key features include:
    git clone https://github.com/RAKIBURRAHMAN007/ride-sharing-backEnd
    cd ride-sharing-backend
    ```
+
 ````
 
 2. **Install dependencies:**
@@ -144,3 +144,4 @@ Key features include:
 - bcryptjs for password hashing
 - Zod for request validation
 - HTTP status codes package for standardized responses
+````
