@@ -2,11 +2,14 @@ import { Router } from "express";
 import { rideController } from "./ride.controller";
 import { checkAuth } from "../../middlewares/checkAuthorization";
 import { UserRole } from "../user/user.interface";
+import { validateRequest } from "../../middlewares/validateRequest";
+import { requestRideSchema } from "./ride.validation";
 
 const router = Router();
 
 router.post(
   "/request-ride",
+  validateRequest(requestRideSchema),
   checkAuth(UserRole.RIDER),
   rideController.requestRide
 );

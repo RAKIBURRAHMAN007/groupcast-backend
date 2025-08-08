@@ -2,10 +2,13 @@ import { Router } from "express";
 import { checkAuth } from "../../middlewares/checkAuthorization";
 import { UserRole } from "../user/user.interface";
 import { driverController } from "./driver.controller";
+import { validateRequest } from "../../middlewares/validateRequest";
+import { requestDriverRegisterSchema } from "./driver.validation";
 
 const router = Router();
 router.post(
   "/register",
+  validateRequest(requestDriverRegisterSchema),
   checkAuth(UserRole.RIDER),
   driverController.requestDriverRegister
 );
