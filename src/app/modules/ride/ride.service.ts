@@ -6,6 +6,7 @@ import httpStatus from "http-status-codes";
 import AppError from "../../errorHelper/AppError";
 
 import { DriverStatus } from "../driver/driver.interface";
+import { calculateDistanceInKm, calculateFare } from "../../utils/distance";
 
 const requestRide = async (
   riderId: string,
@@ -32,12 +33,22 @@ const requestRide = async (
   }
 
   const nearestDriver = nearestDrivers[0];
+  const distance = calculateDistanceInKm(
+    pickupLocation.lat,
+    pickupLocation.lng,
+    destination.lat,
+    destination.lng
+  );
 
+  const fare = calculateFare(distance);
   const ride = await Ride.create({
     riderId,
     driverId: nearestDriver._id,
     pickupLocation,
     destination,
+    distance,
+
+    fare,
     status: RideStatus.REQUESTED,
     requestedAt: new Date(),
   });
@@ -96,7 +107,7 @@ const rejectRide = async (rideId: string, driverId: string) => {
     throw new AppError(httpStatus.BAD_REQUEST, "Driver not found");
   }
 
-  ride.status = RideStatus.CANCELLED;
+  ride.status = RideStatus.REJECTED;
 
   await ride.save();
 
@@ -173,10 +184,59 @@ const markCompleted = async (rideId: string, driverId: string) => {
   await ride.save();
 
   await Driver.findByIdAndUpdate(driver._id, { currentRide: null });
+  const rideFare = ride.fare ?? 0;
+  driver.earnings = (driver.earnings || 0) + rideFare;
+
+  await driver.save();
+  return ride;
+};
+const getRideHistory = async (riderId: string) => {
+  const rides = await Ride.find({ riderId })
+    .sort({ createdAt: -1 })
+    .populate({
+      path: "driverId",
+      select: "_id user",
+      populate: {
+        path: "user",
+        select: "name phone",
+      },
+    })
+    .lean();
+
+  return rides;
+};
+const cancelRide = async (rideId: string, riderId: string) => {
+  const ride = await Ride.findOne({ _id: rideId, riderId });
+
+  if (!ride) {
+    throw new AppError(httpStatus.NOT_FOUND, "Ride not found");
+  }
+
+  if (ride.status !== RideStatus.REQUESTED) {
+    throw new AppError(
+      httpStatus.BAD_REQUEST,
+      "Ride cannot be cancelled at this stage"
+    );
+  }
+
+  ride.status = RideStatus.CANCELLED;
+  ride.cancelledAt = new Date();
+
+  await ride.save();
+
+  if (ride.driverId) {
+    await Driver.findByIdAndUpdate(ride.driverId, { currentRide: null });
+  }
 
   return ride;
 };
-
+const getAllRide = async () => {
+  const rides = await Ride.find({});
+  if (!rides) {
+    throw new AppError(httpStatus.NOT_FOUND, "can't get any ride");
+  }
+  return rides;
+};
 export const rideService = {
   requestRide,
   acceptRide,
@@ -184,4 +244,7 @@ export const rideService = {
   markPickedUp,
   markInTransit,
   markCompleted,
+  getRideHistory,
+  cancelRide,
+  getAllRide,
 };

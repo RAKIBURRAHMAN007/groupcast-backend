@@ -1,14 +1,18 @@
 import { model, Schema } from "mongoose";
 
-import { DriverStatus } from "./driver.interface";
+import { DriverStatus, IDriver } from "./driver.interface";
 
-const driverSchema = new Schema(
+const driverSchema = new Schema<IDriver>(
   {
     user: {
       type: Schema.Types.ObjectId,
       ref: "User",
       required: true,
       unique: true,
+    },
+    earnings: {
+      type: Number,
+      default: 0,
     },
     licenseNumber: {
       type: String,

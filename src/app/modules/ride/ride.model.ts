@@ -34,7 +34,6 @@ const rideSchema = new Schema<IRide>(
 
     fare: { type: Number },
     distance: { type: Number },
-    estimatedDuration: { type: Number },
 
     riderRating: { type: Number },
     driverRating: { type: Number },

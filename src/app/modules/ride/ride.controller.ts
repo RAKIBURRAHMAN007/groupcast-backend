@@ -93,6 +93,40 @@ const markCompleted = catchAsync(async (req: Request, res: Response) => {
     success: true,
   });
 });
+const getRideHistory = catchAsync(async (req: Request, res: Response) => {
+  const riderId = req.user.userId;
+
+  const ride = await rideService.getRideHistory(riderId);
+
+  sendResponse(res, {
+    data: ride,
+    message: "Rider history retrieved successfully",
+    statusCode: httpStatus.OK,
+    success: true,
+  });
+});
+const cancelRide = catchAsync(async (req: Request, res: Response) => {
+  const riderId = req.user.userId;
+  const rideId = req.params.id;
+  const ride = await rideService.cancelRide(rideId, riderId);
+
+  sendResponse(res, {
+    data: ride,
+    message: "ride cancelled successfully",
+    statusCode: httpStatus.OK,
+    success: true,
+  });
+});
+const getAllRide = catchAsync(async (req: Request, res: Response) => {
+  const ride = await rideService.getAllRide();
+
+  sendResponse(res, {
+    data: ride,
+    message: "get all ride  successfully",
+    statusCode: httpStatus.OK,
+    success: true,
+  });
+});
 
 export const rideController = {
   requestRide,
@@ -101,4 +135,7 @@ export const rideController = {
   markPickedUp,
   markInTransit,
   markCompleted,
+  getRideHistory,
+  cancelRide,
+  getAllRide,
 };

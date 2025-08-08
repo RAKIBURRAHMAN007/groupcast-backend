@@ -7,6 +7,7 @@ export enum RideStatus {
   IN_TRANSIT = "in_transit",
   COMPLETED = "completed",
   CANCELLED = "cancelled",
+  REJECTED = "rejected",
 }
 
 export interface ILocation {
@@ -31,7 +32,7 @@ export interface IRide {
 
   fare?: number;
   distance?: number;
-  estimatedDuration?: number;
+
   riderRating?: number;
   driverRating?: number;
 }

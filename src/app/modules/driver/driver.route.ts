@@ -29,4 +29,19 @@ router.patch(
   checkAuth(UserRole.DRIVER),
   driverController.updateDriverLocation
 );
+router.patch(
+  "/set-ability-true",
+  checkAuth(UserRole.DRIVER),
+  driverController.setAbilityTrue
+);
+router.patch(
+  "/set-ability-false",
+  checkAuth(UserRole.DRIVER),
+  driverController.setAbilityFalse
+);
+router.get(
+  "/earningHistory",
+  checkAuth(UserRole.DRIVER),
+  driverController.earningHistory
+);
 export const driverRoutes = router;

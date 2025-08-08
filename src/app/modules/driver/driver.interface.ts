@@ -24,6 +24,7 @@ export interface IDriver {
   };
   status?: DriverStatus;
   isOnline?: boolean;
+  earnings: number;
   currentRide?: Types.ObjectId | null;
   rating?: number;
   location?: {

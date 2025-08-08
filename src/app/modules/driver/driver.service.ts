@@ -99,12 +99,12 @@ const getallDriver = async () => {
   return approvedDrivers;
 };
 const updateLocationAndStatus = async (
-  userId: string,
+  driverId: string,
   latitude: number,
   longitude: number
 ) => {
   const updatedDriver = await Driver.findOneAndUpdate(
-    { userId },
+    { driverId },
     {
       isOnline: true,
       location: {
@@ -114,8 +114,47 @@ const updateLocationAndStatus = async (
     },
     { new: true }
   );
+};
+const setAbilityTrue = async (driverId: string) => {
+  const driver = await Driver.findOne({ driverId });
 
-  return updatedDriver;
+  if (!driver) {
+    throw new AppError(httpStatus.NOT_FOUND, "Driver not found");
+  }
+
+  if (driver.isOnline) {
+    throw new AppError(httpStatus.BAD_REQUEST, "Driver is already online");
+  }
+
+  driver.isOnline = true;
+  await driver.save();
+
+  return driver;
+};
+const setAbilityFalse = async (driverId: string) => {
+  const driver = await Driver.findOne({ driverId });
+
+  if (!driver) {
+    throw new AppError(httpStatus.NOT_FOUND, "Driver not found");
+  }
+
+  if (!driver.isOnline) {
+    throw new AppError(httpStatus.BAD_REQUEST, "Driver is already offline");
+  }
+
+  driver.isOnline = false;
+  await driver.save();
+
+  return driver;
+};
+const earningHistory = async (driverId: string) => {
+  const driver = await Driver.findOne({ driverId });
+
+  if (!driver) {
+    throw new AppError(httpStatus.BAD_REQUEST, "This driver doesn't exist");
+  }
+
+  return driver.earnings;
 };
 
 export const driverService = {
@@ -124,4 +163,7 @@ export const driverService = {
   getallDriver,
   suspendDriver,
   updateLocationAndStatus,
+  setAbilityTrue,
+  setAbilityFalse,
+  earningHistory,
 };

@@ -38,5 +38,19 @@ router.patch(
   checkAuth(UserRole.DRIVER),
   rideController.markCompleted
 );
-
+router.get(
+  "/rideHistory",
+  checkAuth(UserRole.RIDER),
+  rideController.getRideHistory
+);
+router.patch(
+  "/cancel/:id",
+  checkAuth(UserRole.RIDER),
+  rideController.cancelRide
+);
+router.get(
+  "/get-all-ride",
+  checkAuth(UserRole.ADMIN),
+  rideController.getAllRide
+);
 export const rideRoutes = router;
