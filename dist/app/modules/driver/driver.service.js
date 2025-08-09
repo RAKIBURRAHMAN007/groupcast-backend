@@ -89,16 +89,17 @@ const getallDriver = () => __awaiter(void 0, void 0, void 0, function* () {
     return approvedDrivers;
 });
 const updateLocationAndStatus = (driverId, latitude, longitude) => __awaiter(void 0, void 0, void 0, function* () {
-    const updatedDriver = yield driver_model_1.Driver.findOneAndUpdate({ driverId }, {
+    const updatedDriver = yield driver_model_1.Driver.findOneAndUpdate({ user: driverId }, {
         isOnline: true,
         location: {
             type: "Point",
             coordinates: [longitude, latitude],
         },
     }, { new: true });
+    return updatedDriver;
 });
 const setAbilityTrue = (driverId) => __awaiter(void 0, void 0, void 0, function* () {
-    const driver = yield driver_model_1.Driver.findOne({ driverId });
+    const driver = yield driver_model_1.Driver.findOne({ user: driverId });
     if (!driver) {
         throw new AppError_1.default(http_status_codes_1.default.NOT_FOUND, "Driver not found");
     }
@@ -110,7 +111,7 @@ const setAbilityTrue = (driverId) => __awaiter(void 0, void 0, void 0, function*
     return driver;
 });
 const setAbilityFalse = (driverId) => __awaiter(void 0, void 0, void 0, function* () {
-    const driver = yield driver_model_1.Driver.findOne({ driverId });
+    const driver = yield driver_model_1.Driver.findOne({ user: driverId });
     if (!driver) {
         throw new AppError_1.default(http_status_codes_1.default.NOT_FOUND, "Driver not found");
     }
@@ -122,11 +123,11 @@ const setAbilityFalse = (driverId) => __awaiter(void 0, void 0, void 0, function
     return driver;
 });
 const earningHistory = (driverId) => __awaiter(void 0, void 0, void 0, function* () {
-    const driver = yield driver_model_1.Driver.findOne({ driverId });
+    const driver = yield driver_model_1.Driver.findOne({ user: driverId });
     if (!driver) {
         throw new AppError_1.default(http_status_codes_1.default.BAD_REQUEST, "This driver doesn't exist");
     }
-    return driver.earnings;
+    return { totalEarning: driver.earnings };
 });
 exports.driverService = {
     requestDriverRegister,

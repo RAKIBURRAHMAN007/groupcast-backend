@@ -104,7 +104,7 @@ const updateLocationAndStatus = async (
   longitude: number
 ) => {
   const updatedDriver = await Driver.findOneAndUpdate(
-    { driverId },
+    { user: driverId },
     {
       isOnline: true,
       location: {
@@ -114,9 +114,10 @@ const updateLocationAndStatus = async (
     },
     { new: true }
   );
+  return updatedDriver;
 };
 const setAbilityTrue = async (driverId: string) => {
-  const driver = await Driver.findOne({ driverId });
+  const driver = await Driver.findOne({ user: driverId });
 
   if (!driver) {
     throw new AppError(httpStatus.NOT_FOUND, "Driver not found");
@@ -132,7 +133,7 @@ const setAbilityTrue = async (driverId: string) => {
   return driver;
 };
 const setAbilityFalse = async (driverId: string) => {
-  const driver = await Driver.findOne({ driverId });
+  const driver = await Driver.findOne({ user: driverId });
 
   if (!driver) {
     throw new AppError(httpStatus.NOT_FOUND, "Driver not found");
@@ -148,13 +149,13 @@ const setAbilityFalse = async (driverId: string) => {
   return driver;
 };
 const earningHistory = async (driverId: string) => {
-  const driver = await Driver.findOne({ driverId });
+  const driver = await Driver.findOne({ user: driverId });
 
   if (!driver) {
     throw new AppError(httpStatus.BAD_REQUEST, "This driver doesn't exist");
   }
 
-  return driver.earnings;
+  return { totalEarning: driver.earnings };
 };
 
 export const driverService = {

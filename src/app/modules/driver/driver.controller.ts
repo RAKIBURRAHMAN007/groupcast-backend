@@ -61,7 +61,7 @@ const getallDriver = catchAsync(
   }
 );
 const updateDriverLocation = catchAsync(async (req: Request, res: Response) => {
-  const driverId = req.user.id;
+  const driverId = req.user.userId;
   const { latitude, longitude } = req.body;
 
   const updatedDriver = await driverService.updateLocationAndStatus(
@@ -77,7 +77,7 @@ const updateDriverLocation = catchAsync(async (req: Request, res: Response) => {
   });
 });
 const setAbilityTrue = catchAsync(async (req: Request, res: Response) => {
-  const driverId = req.user.id;
+  const driverId = req.user.userId;
 
   const updatedDriver = await driverService.setAbilityTrue(driverId);
 
@@ -88,7 +88,7 @@ const setAbilityTrue = catchAsync(async (req: Request, res: Response) => {
   });
 });
 const setAbilityFalse = catchAsync(async (req: Request, res: Response) => {
-  const driverId = req.user.id;
+  const driverId = req.user.userId;
 
   const updatedDriver = await driverService.setAbilityFalse(driverId);
 
@@ -99,14 +99,14 @@ const setAbilityFalse = catchAsync(async (req: Request, res: Response) => {
   });
 });
 const earningHistory = catchAsync(async (req: Request, res: Response) => {
-  const driverId = req.user.id;
+  const driverId = req.user.userId;
 
-  const updatedDriver = await driverService.earningHistory(driverId);
+  const earningHistory = await driverService.earningHistory(driverId);
 
   res.status(httpStatus.OK).json({
     success: true,
     message: "retrieved earning history successfully",
-    data: updatedDriver,
+    data: earningHistory,
   });
 });
 export const driverController = {

@@ -58,7 +58,7 @@ const getallDriver = (0, catchAsync_1.catchAsync)((req, res, next) => __awaiter(
     });
 }));
 const updateDriverLocation = (0, catchAsync_1.catchAsync)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    const driverId = req.user.id;
+    const driverId = req.user.userId;
     const { latitude, longitude } = req.body;
     const updatedDriver = yield driver_service_1.driverService.updateLocationAndStatus(driverId, latitude, longitude);
     res.status(http_status_codes_1.default.OK).json({
@@ -68,7 +68,7 @@ const updateDriverLocation = (0, catchAsync_1.catchAsync)((req, res) => __awaite
     });
 }));
 const setAbilityTrue = (0, catchAsync_1.catchAsync)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    const driverId = req.user.id;
+    const driverId = req.user.userId;
     const updatedDriver = yield driver_service_1.driverService.setAbilityTrue(driverId);
     res.status(http_status_codes_1.default.OK).json({
         success: true,
@@ -77,7 +77,7 @@ const setAbilityTrue = (0, catchAsync_1.catchAsync)((req, res) => __awaiter(void
     });
 }));
 const setAbilityFalse = (0, catchAsync_1.catchAsync)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    const driverId = req.user.id;
+    const driverId = req.user.userId;
     const updatedDriver = yield driver_service_1.driverService.setAbilityFalse(driverId);
     res.status(http_status_codes_1.default.OK).json({
         success: true,
@@ -86,12 +86,12 @@ const setAbilityFalse = (0, catchAsync_1.catchAsync)((req, res) => __awaiter(voi
     });
 }));
 const earningHistory = (0, catchAsync_1.catchAsync)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    const driverId = req.user.id;
-    const updatedDriver = yield driver_service_1.driverService.earningHistory(driverId);
+    const driverId = req.user.userId;
+    const earningHistory = yield driver_service_1.driverService.earningHistory(driverId);
     res.status(http_status_codes_1.default.OK).json({
         success: true,
         message: "retrieved earning history successfully",
-        data: updatedDriver,
+        data: earningHistory,
     });
 }));
 exports.driverController = {
