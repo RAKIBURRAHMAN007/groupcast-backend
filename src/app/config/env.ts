@@ -9,7 +9,7 @@ interface EnvConfig {
 
   jwt_access_secrete: string;
   jwt_access_expires: string;
-
+  EXPRESS_SESSION_SECRET: string;
   BCRYPT_SALT_ROUND: string;
   ADMIN_EMAIL: string;
   ADMIN_PASSWORD: string;
@@ -50,6 +50,7 @@ const loadEnvVariables = (): EnvConfig => {
     ADMIN_PASSWORD: process.env.ADMIN_PASSWORD as string,
     JWT_REFRESH_SECRETE: process.env.JWT_REFRESH_SECRETE as string,
     JWT_REFRESH_EXPIRES: process.env.JWT_REFRESH_EXPIRES as string,
+    EXPRESS_SESSION_SECRET: process.env.EXPRESS_SESSION_SECRET as string,
   };
 };
 

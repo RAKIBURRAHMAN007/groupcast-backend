@@ -1,0 +1,17 @@
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.UserRoutes = void 0;
+const express_1 = require("express");
+const user_controller_1 = require("./user.controller");
+const checkAuthorization_1 = require("../../middlewares/checkAuthorization");
+const user_interface_1 = require("./user.interface");
+const validateRequest_1 = require("../../middlewares/validateRequest");
+const user_validation_1 = require("./user.validation");
+const router = (0, express_1.Router)();
+router.post("/register", (0, validateRequest_1.validateRequest)(user_validation_1.createUserZodSchema), user_controller_1.userController.createUser);
+router.get("/", (0, checkAuthorization_1.checkAuth)(user_interface_1.UserRole.ADMIN), user_controller_1.userController.getAllUser);
+router.delete("/delete/:id", (0, checkAuthorization_1.checkAuth)(user_interface_1.UserRole.ADMIN), user_controller_1.userController.deleteUser);
+router.patch("/:id", (0, validateRequest_1.validateRequest)(user_validation_1.updateUserZodSchema), (0, checkAuthorization_1.checkAuth)(...Object.values(user_interface_1.UserRole)), user_controller_1.userController.updateUser);
+router.patch("/block/:id", (0, checkAuthorization_1.checkAuth)(user_interface_1.UserRole.ADMIN), user_controller_1.userController.blockUser);
+router.patch("/unBlock/:id", (0, checkAuthorization_1.checkAuth)(user_interface_1.UserRole.ADMIN), user_controller_1.userController.unBlockUser);
+exports.UserRoutes = router;
